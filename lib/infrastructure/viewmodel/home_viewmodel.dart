@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -15,30 +16,45 @@ class HomeViewModel extends ChangeNotifier {
 
   Future<void> _init() async {
     // Opening json file
-    var jsonString = await rootBundle.loadString("assets/json/spots.json");
-    // Decoding json
-    var json = jsonDecode(jsonString);
-    // Mapping data
-    spots = List<Map<String, dynamic>>.from(json["data"])
-        .map((json) => Spot.fromJson(json))
-        .toList();
+    // var jsonString = await rootBundle.loadString("assets/json/spots.json");
+    // // Decoding json
+    // var json = jsonDecode(jsonString);
+    // // Mapping data
+    // spots = List<Map<String, dynamic>>.from(json["data"])
+    //     .map((json) => Spot.fromJson(json))
+    //     .toList();
+    // notifyListeners();
+
+    var response = await _spotEndpoint.getSpots();
+
+    //parse spots get in ResponseDto
+    final spots = response.data.map((json) => Spot.fromJson(json)).toList();
+
+    for (var spot in spots) {
+      print(spot.title);
+    }
     notifyListeners();
   }
 
   void loadMore() {
-    /// TODO
+    spots.addAll(spots);
+    notifyListeners();
   }
 
   Spot getRandom() {
-    /// TODO
+    final random = Random();
+    final index = random.nextInt(spots.length);
+    return spots[index];
+
     return Spot(id: 0);
   }
 
   void navigateToDetail(BuildContext context) {
-    /// TODO
+    Navigator.of(context).pushNamed("/detail");
   }
 
   void getSpotByName(String name) {
-    /// TODO
+    spots = spots.where((spot) => spot.title!.contains(name)).toList();
+    notifyListeners();
   }
 }
