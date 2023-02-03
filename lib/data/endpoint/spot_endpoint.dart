@@ -1,7 +1,8 @@
 import 'package:retrofit/retrofit.dart';
 import 'package:dio/dio.dart';
 import 'package:spots_discovery/data/dto/response_dto.dart';
-import 'package:spots_discovery/data/model/spot.dart';
+
+import '../model/spot_detail.dart';
 
 part 'spot_endpoint.g.dart';
 
@@ -11,4 +12,7 @@ abstract class SpotEndpoint {
 
   @GET("/spots.json")
   Future<ResponseDto> getSpots();
+
+  @GET("/spot-details/{id}.json")
+  Future<SpotDetail> getSpot(@Path("id") int id);
 }

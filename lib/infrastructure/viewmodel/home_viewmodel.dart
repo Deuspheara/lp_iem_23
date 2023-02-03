@@ -5,6 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:spots_discovery/data/endpoint/spot_endpoint.dart';
 import 'package:spots_discovery/data/model/spot.dart';
+import 'package:spots_discovery/ui/detail.dart';
+
+import '../../data/model/spot_detail.dart';
 
 class HomeViewModel extends ChangeNotifier {
   final SpotEndpoint _spotEndpoint;
@@ -28,16 +31,14 @@ class HomeViewModel extends ChangeNotifier {
     var response = await _spotEndpoint.getSpots();
 
     //parse spots get in ResponseDto
-    final spots = response.data.map((json) => Spot.fromJson(json)).toList();
+    spots =
+        response.data.map((json) => Spot.fromJson(json)).toList().cast<Spot>();
 
-    for (var spot in spots) {
-      print(spot.title);
-    }
     notifyListeners();
   }
 
   void loadMore() {
-    spots.addAll(spots);
+    //TODO
     notifyListeners();
   }
 
@@ -45,12 +46,20 @@ class HomeViewModel extends ChangeNotifier {
     final random = Random();
     final index = random.nextInt(spots.length);
     return spots[index];
-
-    return Spot(id: 0);
   }
 
-  void navigateToDetail(BuildContext context) {
-    Navigator.of(context).pushNamed("/detail");
+  void navigateToDetail(BuildContext context, Spot spot) async {
+    final response = await _spotEndpoint.getSpot(spot.id);
+
+    if (response == null) {
+      print("No data");
+
+      return;
+    }
+    print("comments: ${response.comments?.comments}");
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) =>
+            SpotDetailPage(spot: spot, spotDetail: response)));
   }
 
   void getSpotByName(String name) {
