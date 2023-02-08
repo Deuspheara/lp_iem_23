@@ -7,7 +7,7 @@ import 'package:spots_discovery/data/endpoint/spot_endpoint.dart';
 import 'package:spots_discovery/data/model/spot.dart';
 import 'package:spots_discovery/ui/detail.dart';
 
-import '../../data/model/spot_detail.dart';
+import 'package:spots_discovery/data/model/spot_details.dart';
 
 class HomeViewModel extends ChangeNotifier {
   final SpotEndpoint _spotEndpoint;
@@ -56,7 +56,7 @@ class HomeViewModel extends ChangeNotifier {
 
       return;
     }
-    print("comments: ${response.comments?.comments}");
+    print("comments: ${response.comments?.length}");
     Navigator.of(context).push(MaterialPageRoute(
         builder: (context) =>
             SpotDetailPage(spot: spot, spotDetail: response)));

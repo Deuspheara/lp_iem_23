@@ -5,11 +5,11 @@ part 'comment.g.dart';
 @JsonSerializable(
     checked: true, explicitToJson: true, fieldRename: FieldRename.snake)
 class Comment {
-  String? text;
-  String? createdAt;
+  String? comment;
+  int? createdAt;
 
   Comment({
-    this.text,
+    this.comment,
     this.createdAt,
   });
 

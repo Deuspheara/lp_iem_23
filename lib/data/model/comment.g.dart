@@ -11,8 +11,8 @@ Comment _$CommentFromJson(Map<String, dynamic> json) => $checkedCreate(
       json,
       ($checkedConvert) {
         final val = Comment(
-          text: $checkedConvert('text', (v) => v as String?),
-          createdAt: $checkedConvert('created_at', (v) => v as String?),
+          comment: $checkedConvert('comment', (v) => v as String?),
+          createdAt: $checkedConvert('created_at', (v) => v as int?),
         );
         return val;
       },
@@ -20,6 +20,6 @@ Comment _$CommentFromJson(Map<String, dynamic> json) => $checkedCreate(
     );
 
 Map<String, dynamic> _$CommentToJson(Comment instance) => <String, dynamic>{
-      'text': instance.text,
+      'comment': instance.comment,
       'created_at': instance.createdAt,
     };

@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'spot_detail.dart';
+part of 'spot_details.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
@@ -15,9 +15,10 @@ SpotDetail _$SpotDetailFromJson(Map<String, dynamic> json) => $checkedCreate(
           address: $checkedConvert('address', (v) => v as String?),
           comments: $checkedConvert(
               'comments',
-              (v) => v == null
-                  ? null
-                  : Comments.fromJson(v as Map<String, dynamic>)),
+              (v) => (v as Map<String, dynamic>?)?.map(
+                    (k, e) => MapEntry(
+                        k, Comment.fromJson(e as Map<String, dynamic>)),
+                  )),
           description: $checkedConvert('description', (v) => v as String?),
           distance: $checkedConvert('distance', (v) => v as int?),
           favoriteCount: $checkedConvert('favorite_count', (v) => v as int?),
@@ -26,7 +27,7 @@ SpotDetail _$SpotDetailFromJson(Map<String, dynamic> json) => $checkedCreate(
           imageThumbnail:
               $checkedConvert('image_thumbnail', (v) => v as String?),
           imagesCollection: $checkedConvert('images_collection',
-              (v) => (v as List<dynamic>?)?.map((e) => e as String).toList()),
+              (v) => (v as List<dynamic>?)?.map((e) => e as String?).toList()),
           isClosed: $checkedConvert('is_closed', (v) => v as bool?),
           isFavorite: $checkedConvert('is_favorite', (v) => v as bool?),
           isRecommended: $checkedConvert('is_recommended', (v) => v as bool?),
@@ -69,7 +70,7 @@ Map<String, dynamic> _$SpotDetailToJson(SpotDetail instance) =>
     <String, dynamic>{
       'about': instance.about,
       'address': instance.address,
-      'comments': instance.comments?.toJson(),
+      'comments': instance.comments?.map((k, e) => MapEntry(k, e.toJson())),
       'description': instance.description,
       'distance': instance.distance,
       'favorite_count': instance.favoriteCount,

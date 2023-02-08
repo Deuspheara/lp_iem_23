@@ -1,23 +1,24 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:spots_discovery/data/model/category.dart';
+import 'package:spots_discovery/data/model/comment.dart';
 
 import 'comments.dart';
 
-part 'spot_detail.g.dart';
+part 'spot_details.g.dart';
 
 @JsonSerializable(
     checked: true, explicitToJson: true, fieldRename: FieldRename.snake)
 class SpotDetail {
   String? about;
   String? address;
-  Comments? comments;
+  Map<String, Comment>? comments;
   String? description;
   int? distance;
   int? favoriteCount;
   int? id;
   String? imageFullsize;
   String? imageThumbnail;
-  List<String>? imagesCollection;
+  List<String?>? imagesCollection;
   bool? isClosed;
   bool? isFavorite;
   bool? isRecommended;
