@@ -16,7 +16,7 @@ class SpotDetailViewModel extends ChangeNotifier {
     _init();
   }
 
-  CommentDto? comment;
+  Comment? comment;
 
   Future<void> _init() async {
     notifyListeners();
@@ -24,18 +24,10 @@ class SpotDetailViewModel extends ChangeNotifier {
 
   //post message
   Future<String> postComment(int id, String comment) async {
-    print("postComment: $id, $comment");
-    final response = await _spotEndpoint.postComment(
-        id,
-        Comment(
-                comment: comment,
-                createdAt: DateTimeToTimestamp(DateTime.now()))
-            .toJson());
-    print("created_at: ${DateTimeToTimestamp(DateTime.now())}");
-
-    if (response.name != null) {
-      this.comment = response;
-    }
+    this.comment = Comment(
+        comment: comment, createdAt: DateTimeToTimestamp(DateTime.now()));
+    final response =
+        await _spotEndpoint.postComment(id, this.comment!.toJson());
 
     notifyListeners();
 

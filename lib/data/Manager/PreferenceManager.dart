@@ -32,6 +32,14 @@ class SharedPreferenceManager {
         _keyFavSpots, favSpots.map((e) => e.toString()).toList());
   }
 
+  static Future<void> updateFavSpot(int id) async {
+    final SharedPreferences prefs = await _prefs;
+    List<int> favSpots = await getFavSpots();
+    favSpots.contains(id) ? favSpots.remove(id) : favSpots.add(id);
+    await prefs.setStringList(
+        _keyFavSpots, favSpots.map((e) => e.toString()).toList());
+  }
+
   static Future<bool> isFavSpot(int id) async {
     final List<int> favSpots = await getFavSpots();
     return favSpots.contains(id);

@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 class MinimalTextField extends StatelessWidget {
   final String? hintText;
   final void Function(String)? onChanged;
+  final TextEditingController? controller;
 
-  MinimalTextField({this.hintText, this.onChanged});
+  MinimalTextField({this.hintText, this.onChanged, this.controller});
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +16,8 @@ class MinimalTextField extends StatelessWidget {
         color: Colors.grey[200],
         borderRadius: BorderRadius.circular(10),
       ),
-      child: TextField(
+      child: TextFormField(
+        controller: controller,
         onChanged: onChanged,
         decoration: InputDecoration(
           hintText: hintText,

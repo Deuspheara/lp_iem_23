@@ -5,6 +5,7 @@ import 'package:flutter/rendering.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 import 'package:spots_discovery/data/endpoint/spot_endpoint.dart';
+import 'package:spots_discovery/data/extensions/HexColor.dart';
 import 'package:spots_discovery/data/model/comment.dart';
 import 'package:spots_discovery/infrastructure/viewmodel/spot_detail_viewmodel.dart';
 import 'package:spots_discovery/ui/components/minimalistic_textfield.dart';
@@ -27,6 +28,9 @@ class SpotDetailPage extends StatefulWidget {
 class _SpotDetailPageState extends State<SpotDetailPage> {
   String _comment = "";
   final ScrollController _controller = ScrollController();
+
+  final TextEditingController _textEditingController = TextEditingController();
+
   void _scrollDown() {
     _controller.animateTo(
       _controller.position.maxScrollExtent + 50,
@@ -148,7 +152,9 @@ class _SpotDetailPageState extends State<SpotDetailPage> {
                       child: ListTile(
                           title: Container(
                         decoration: BoxDecoration(
-                          color: Colors.grey[200],
+                          color: HexColor.fromHex(
+                              (widget.spot.tagsCategory?[i].color ??
+                                  "#000000")),
                           borderRadius: BorderRadius.circular(8.0),
                         ),
                         child: Padding(
@@ -185,13 +191,13 @@ class _SpotDetailPageState extends State<SpotDetailPage> {
                         );
                       }),
                 ),
-                //You're a flutter senior developper and UX designer for more than 20 years. Help me create a TextField Widget that is minimalistic and beautiful
                 Row(
                   children: [
                     Expanded(
                       child: Container(
                         padding: EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
                         child: MinimalTextField(
+                          controller: _textEditingController,
                           hintText: "Ajouter un commentaire",
                           onChanged: (value) {
                             _comment = value;
@@ -218,6 +224,7 @@ class _SpotDetailPageState extends State<SpotDetailPage> {
                                           DateTime.now().millisecondsSinceEpoch)
                                 });
                                 _scrollDown();
+                                _textEditingController.clear();
                               });
                             });
                           }

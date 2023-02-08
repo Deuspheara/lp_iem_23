@@ -5,11 +5,10 @@ import 'package:spots_discovery/data/Manager/PreferenceManager.dart';
 import 'package:spots_discovery/data/endpoint/spot_endpoint.dart';
 import 'package:spots_discovery/data/model/spot.dart';
 import 'package:spots_discovery/ui/detail.dart';
-import 'package:spots_discovery/ui/favorite.dart';
 
-class HomeViewModel extends ChangeNotifier {
+class FavoriteViewModel extends ChangeNotifier {
   final SpotEndpoint _spotEndpoint;
-  HomeViewModel(this._spotEndpoint) {
+  FavoriteViewModel(this._spotEndpoint) {
     _init();
   }
 
@@ -29,6 +28,8 @@ class HomeViewModel extends ChangeNotifier {
     spots =
         response.data.map((json) => Spot.fromJson(json)).toList().cast<Spot>();
 
+    spots = spots.where((element) => favorites[element.id] == true).toList();
+
     notifyListeners();
   }
 
@@ -40,6 +41,7 @@ class HomeViewModel extends ChangeNotifier {
   void toggleFavorite(Spot spot) async {
     await SharedPreferenceManager.updateFavSpot(spot.id);
     favorites[spot.id] = await SharedPreferenceManager.isFavSpot(spot.id);
+    spots = spots.where((element) => favorites[element.id] == true).toList();
 
     notifyListeners();
   }
@@ -59,18 +61,15 @@ class HomeViewModel extends ChangeNotifier {
       return;
     }
     print("comments: ${response.comments?.length}");
-    Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) =>
-            SpotDetailPage(spot: spot, spotDetail: response)));
-  }
 
-  void navigateToFavorite(BuildContext context) {
-    Navigator.of(context)
-        .push(MaterialPageRoute(builder: (context) => FavoriteView()));
-  }
-
-  void getSpotByName(String name) {
-    spots = spots.where((spot) => spot.title!.contains(name)).toList();
-    notifyListeners();
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => SpotDetailPage(
+          spot: spot,
+          spotDetail: response,
+        ),
+      ),
+    );
   }
 }

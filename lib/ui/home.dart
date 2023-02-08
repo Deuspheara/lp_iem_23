@@ -17,9 +17,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  //tableau favoris color
-  final favoriteColor = <int, bool>{};
-
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<HomeViewModel>(
@@ -28,11 +25,36 @@ class _HomeScreenState extends State<HomeScreen> {
         return Scaffold(
           appBar: AppBar(
             title: const Text("Spots"),
+            actions: [
+              Padding(
+                padding: const EdgeInsets.only(right: 24.0),
+                child: IconButton(
+                  icon: const Icon(Icons.favorite),
+                  onPressed: () {
+                    Provider.of<HomeViewModel>(context, listen: false)
+                        .navigateToFavorite(context);
+                  },
+                ),
+              )
+            ],
+          ),
+          floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
+          floatingActionButton: FloatingActionButton(
+            backgroundColor: Color.fromARGB(255, 238, 238, 238),
+            onPressed: () {
+              final provider =
+                  Provider.of<HomeViewModel>(context, listen: false);
+              provider.navigateToDetail(context, provider.getRandom());
+            },
+            child: const Icon(
+              Icons.shuffle,
+              color: Color.fromARGB(255, 33, 38, 66),
+            ),
           ),
           backgroundColor: const Color.fromARGB(255, 33, 38, 66),
           body: Consumer<HomeViewModel>(
             builder: (context, viewModel, child) {
-              print(viewModel.spots.length);
+              print("favorites: ${viewModel.favorites}");
               return Column(
                 children: [
                   Expanded(
@@ -47,28 +69,18 @@ class _HomeScreenState extends State<HomeScreen> {
                                   context, viewModel.spots[index]);
                             },
                             trailing: IconButton(
-                              icon: Icon(Icons.favorite_border),
-                              color: favoriteColor[index] ?? false
+                              icon: const Icon(Icons.favorite_border),
+                              //check if spot id is equal to one of favorite ids
+                              color: viewModel.favorites[
+                                          viewModel.spots[index].id] ==
+                                      true
                                   ? Colors.red
                                   : Colors.white,
                               onPressed: () async {
-                                if (await SharedPreferenceManager.isFavSpot(
-                                    viewModel.spots[index].id)) {
-                                  SharedPreferenceManager.removeFavSpot(
-                                      viewModel.spots[index].id);
-                                  setState(() {
-                                    favoriteColor[index] = false;
-                                  });
-
-                                  print("remove");
-                                } else {
-                                  SharedPreferenceManager.addFavSpot(
-                                      viewModel.spots[index].id);
-                                  setState(() {
-                                    favoriteColor[index] = true;
-                                  });
-                                  print("add");
-                                }
+                                setState(() {
+                                  viewModel
+                                      .toggleFavorite(viewModel.spots[index]);
+                                });
                               },
                             ),
                             leading: ClipRRect(
@@ -113,14 +125,14 @@ class _HomeScreenState extends State<HomeScreen> {
                         );
                       },
                     ),
-                  )
+                  ),
                 ],
               );
             },
           ),
         );
       },
-      lazy: false,
+      lazy: true,
     );
   }
 }
